@@ -1,9 +1,7 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./components/App.jsx";
+import ReactDom from "react-dom";
+import "./index.css";
+import "bootstrap/dist/css/bootstrap.css";
+import Counter from "./Components/counter.jsx";
 
-const title = "My Minimal React Webpack Babel Setup (Ricky)";
-
-ReactDOM.render(<App title={title} />, document.getElementById("app"));
-
-module.hot.accept();
+ReactDom.render(<Counter />, document.getElementById("app"));
