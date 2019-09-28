@@ -1,28 +1,15 @@
 import React, { Component } from "react";
-import { getMovies, deleteMovie } from "../services/fakeMovieService";
-
+import Like from "./Like";
 // const movies = getMovies();
 // console.log(movies);
 
 export default class Movies extends Component {
-  state = {
-    movies: getMovies()
-  };
-
-  handleDeleteClick(id) {
-    deleteMovie(id);
-    this.setState({ movies: getMovies() });
-    // this.setState({
-    //   movies: this.state.movies.filter(movie => movie._id !== id)
-    // });
-  }
-
   render() {
-    const { length: moviesCount } = this.state.movies;
+    const { length: moviesCount } = this.props.movies;
     if (moviesCount === 0) return <p>There are no movies in the dababase.</p>;
 
     return (
-      <React.Fragment>
+      <div className="container">
         <p>Showing {moviesCount} movies in the dababase.</p>
         <table className="table">
           <thead>
@@ -32,18 +19,25 @@ export default class Movies extends Component {
               <th>Stock</th>
               <th>Rate</th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            {this.state.movies.map(movie => (
+            {this.props.movies.map(movie => (
               <tr key={movie._id}>
                 <td>{movie.title}</td>
                 <td>{movie.genre.name}</td>
                 <td>{movie.numberInStock}</td>
                 <td>{movie.dailyRentalRate}</td>
                 <td>
+                  <Like
+                    onClick={() => this.props.onLike(movie)}
+                    liked={movie.liked}
+                  />
+                </td>
+                <td>
                   <button
-                    onClick={() => this.handleDeleteClick(movie._id)}
+                    onClick={() => this.props.onDelete(movie._id)}
                     className="btn btn-danger btn-sm"
                   >
                     Delete
@@ -53,7 +47,7 @@ export default class Movies extends Component {
             ))}
           </tbody>
         </table>
-      </React.Fragment>
+      </div>
     );
   }
 }
