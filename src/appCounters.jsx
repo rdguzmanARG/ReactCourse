@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import Counters from "./counters";
-import Navbar from "./navbar";
-import { getMovies, deleteMovie } from "../services/fakeMovieService";
-import Movies from "./movies";
+import Counters from "./components/counters";
+import Navbar from "./components/navbar";
 
 class App extends Component {
   state = {
@@ -12,8 +10,7 @@ class App extends Component {
       { id: 3, value: 0 },
       { id: 4, value: 0 },
       { id: 5, value: 0 }
-    ],
-    movies: getMovies()
+    ]
   };
 
   handleDelete = counter => {
@@ -42,37 +39,18 @@ class App extends Component {
     this.setState({ counters });
   };
 
-  handleLike = movie => {
-    const movies = [...this.state.movies];
-    const index = movies.indexOf(movie);
-    movies[index] = { ...movie };
-    movies[index].liked = !movies[index].liked;
-    this.setState({ movies });
-  };
-
-  handleDeleteMovie = id => {
-    console.log("Delete", id);
-    deleteMovie(id);
-    this.setState({ movies: getMovies() });
-  };
-
   render() {
     return (
       <React.Fragment>
-        {/*<Navbar
+        <Navbar
           totalCount={this.state.counters.filter(c => c.value > 0).length}
         />
-         <Counters
+        <Counters
           onReset={this.handleReset}
           onDecrement={this.handleDecrement}
           onIncrement={this.handleIncrement}
           onDelete={this.handleDelete}
           counters={this.state.counters}
-        /> */}
-        <Movies
-          movies={this.state.movies}
-          onDelete={this.handleDeleteMovie}
-          onLike={this.handleLike}
         />
       </React.Fragment>
     );

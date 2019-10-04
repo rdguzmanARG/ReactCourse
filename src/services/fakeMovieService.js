@@ -1,4 +1,6 @@
 import * as genresAPI from "./fakeGenreService";
+import _ from "lodash";
+
 const movies = [
   {
     _id: "5b21ca3eeb7f6fbccd471815",
@@ -52,6 +54,13 @@ const movies = [
     dailyRentalRate: 4.5
   },
   {
+    _id: "5b21ca3eeb7a1fbccd47181e",
+    title: "Titanic",
+    genre: { _id: "5b21ca3eeb7f6fbccd471820", name: "Thriller" },
+    numberInStock: 3,
+    dailyRentalRate: 4.5
+  },
+  {
     _id: "5b21ca3eeb7f6fbccd47181f",
     title: "The Sixth Sense",
     genre: { _id: "5b21ca3eeb7f6fbccd471820", name: "Thriller" },
@@ -67,8 +76,25 @@ const movies = [
   }
 ];
 
+export function getTotalMovies(genderId) {
+  if (genderId == null) return movies.length;
+  else
+    return _(movies)
+      .filter(f => f.genre._id === genderId)
+      .value().length;
+}
+
 export function getMovies() {
   return movies;
+}
+
+export function getMoviesByPage(page, itemsByPage, genderId, sortOrder) {
+  const from = (page - 1) * itemsByPage;
+  const to = from + itemsByPage;
+  return _(movies)
+    .filter(f => genderId == null || f.genre._id === genderId)
+    .slice(from, to)
+    .value();
 }
 
 export function getMovie(id) {
@@ -77,10 +103,11 @@ export function getMovie(id) {
 
 export function saveMovie(movie) {
   let movieInDb = movies.find(m => m._id === movie._id) || {};
-  movieInDb.name = movie.name;
-  movieInDb.genre = genresAPI.genres.find(g => g._id === movie.genreId);
+  // movieInDb.name = movie.name;
+  movieInDb.genre = genresAPI.genres.find(g => g._id === movie.genre._id);
   movieInDb.numberInStock = movie.numberInStock;
   movieInDb.dailyRentalRate = movie.dailyRentalRate;
+  movieInDb.liked = movie.liked;
 
   if (!movieInDb._id) {
     movieInDb._id = Date.now();
